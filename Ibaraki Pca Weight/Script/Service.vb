@@ -1,46 +1,49 @@
-﻿Imports Microsoft.Office.Interop.Excel
+Imports Microsoft.Office.Interop.Excel
 
+''' <summary>
+''' Điều phối toàn bộ quy trình nhập số lượng và ghi dữ liệu vào template Excel Ibaraki PCa.
+''' </summary>
 Friend Module Service
     ''' <summary>
-    ''' Weight Ibaraki Pca.
+    ''' Chạy lần lượt các nhóm câu hỏi nghiệp vụ và cập nhật workbook Excel đang mở.
     ''' </summary>
-    ''' <param name="xlApp">Excel Application.</param>
+    ''' <param name="xlApp">Ứng dụng Excel đang thao tác.</param>
     Friend Sub WtIbarakiPca(xlApp As Application)
-        ' Fare
+        ' Nhóm vận chuyển.
         Fare(xlApp, HdrYNQ(vbTab & vbTab & "運賃 (2トン車): "))
-        ' Slab hook type
+        ' Nhóm slab hook D13.
         SlabHookType(xlApp, HdrYNQ(vbTab & vbTab & "スラブフック型 (D13): "))
-        'Slab L type
+        ' Nhóm slab L D13.
         SlabLType(xlApp, HdrYNQ(vbTab & vbTab & "スラブＬ型 (D13): "))
-        ' Slab straight
+        ' Nhóm slab thẳng D13.
         SlabStr(xlApp, HdrYNQ(vbTab & vbTab & "スラブ直 (D13): "))
-        ' Slab reinforcement hook type
+        ' Nhóm slab gia cường hook D10.
         SlabReinfHookType(xlApp, HdrYNQ(vbTab & vbTab & "スラブ補強フック型 (D10): "))
-        ' Slab reinforcement straight
+        ' Nhóm slab gia cường thẳng D10.
         SlabReinfStr(xlApp, HdrYNQ(vbTab & vbTab & "スラブ補強直 (D10): "))
-        ' Lower end d13
+        ' Nhóm thép dưới D13 luôn được nhập.
         HdrWrng(vbTab & vbTab & "下端 (D13)" & vbCrLf)
         LwrEndD13(xlApp)
-        ' Lower end d16
+        ' Nhóm thép dưới D16 tùy chọn.
         LwrEndD16(xlApp, HdrYNQ(vbTab & vbTab & "下端 (D16): "))
-        ' Edge
+        ' Nhóm thép đầu biên D10.
         Edge(xlApp, HdrYNQ(vbTab & vbTab & "端部 (D10): "))
-        ' Sleeve
+        ' Số lượng sleeve.
         PubDVal(xlApp, "BA124", HdrDInp(vbTab & vbTab & "スリーブ: "))
-        ' Corner joint
+        ' Nhóm thép góc.
         HdrWrng(vbTab & vbTab & "コーナー" & vbCrLf)
         JtCor(xlApp)
-        ' Dirt floor scissors
+        ' Vật tư sàn đất.
         PubDVal(xlApp, "BA137", HdrDInp(vbTab & vbTab & "土間用さし: "))
-        ' U type
+        ' Nhóm U type D16.
         PubDModVal(xlApp, "126", "（Ｕノ字型）", "900×80×900", 3.1, HdrDInp(vbTab & vbTab & "Ｕ型 (D16): "))
-        ' Haunch
+        ' Nhóm haunch H250.
         Haunch(xlApp, HdrYNQ(vbTab & vbTab & "ハンチ (H250): "))
-        ' End slab for deep foundation
+        ' End slab cho móng sâu.
         PubDModVal(xlApp, "128", "650×250　　フック付", 0.6, HdrDInp(vbTab & vbTab & "深基礎用端部スラブ (D10): "))
-        ' Electric water heater
+        ' Máy nước nóng điện.
         ElecWtrHtr(xlApp, HdrDInp(vbTab & vbTab & "電気温水器: "))
-        ' Parts
+        ' Danh sách phụ kiện và vật tư phụ.
         HdrWrng(vbTab & vbTab & "副資材リスト" & vbCrLf)
         Parts(xlApp)
     End Sub

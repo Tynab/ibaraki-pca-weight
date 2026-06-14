@@ -1,26 +1,29 @@
 ﻿Imports Microsoft.Office.Interop.Excel
 
+''' <summary>
+''' Tập hợp các hàm nghiệp vụ ghi số lượng vật tư/thép vào đúng ô của template Ibaraki PCa.
+''' </summary>
 Friend Module Util
     ''' <summary>
-    ''' 運賃 (2トン車).
+    ''' Ghi lựa chọn vận chuyển bằng xe 2 tấn và số dòng thép mặc định.
     ''' </summary>
-    ''' <param name="xlApp">Excel Application.</param>
-    ''' <param name="choosen">Selection.</param>
-    Friend Sub Fare(xlApp As Application, choosen As Double)
-        If choosen = 1 Then
-            DctVal(xlApp, "BA158", choosen)
+    ''' <param name="xlApp">Ứng dụng Excel đang thao tác.</param>
+    ''' <param name="chosen">Giá trị lựa chọn 1/0.</param>
+    Friend Sub Fare(xlApp As Application, chosen As Double)
+        If chosen = 1 Then
+            DctVal(xlApp, "BA158", chosen)
         End If
         DctVal(xlApp, "BA108", 5) ' D13
         DctVal(xlApp, "BA109", 3) ' D10
     End Sub
 
     ''' <summary>
-    ''' スラブフック型 (D13).
+    ''' Nhập số lượng cho nhóm slab hook type D13.
     ''' </summary>
-    ''' <param name="xlApp">Excel Application.</param>
-    ''' <param name="choosen">Selection.</param>
-    Friend Sub SlabHookType(xlApp As Application, choosen As Double)
-        If choosen = 1 Then
+    ''' <param name="xlApp">Ứng dụng Excel đang thao tác.</param>
+    ''' <param name="chosen">Giá trị lựa chọn 1/0.</param>
+    Friend Sub SlabHookType(xlApp As Application, chosen As Double)
+        If chosen = 1 Then
             PubDVal(xlApp, "BA35", DtlDInp(vbTab & "95×5405: "))
             PubDVal(xlApp, "BA36", DtlDInp(vbTab & "95×4905: "))
             PubDVal(xlApp, "BA37", DtlDInp(vbTab & "95×4405: "))
@@ -35,12 +38,12 @@ Friend Module Util
     End Sub
 
     ''' <summary>
-    ''' スラブＬ型 (D13).
+    ''' Nhập số lượng cho nhóm slab L type D13.
     ''' </summary>
-    ''' <param name="xlApp">Excel Application.</param>
-    ''' <param name="choosen">Selection.</param>
-    Friend Sub SlabLType(xlApp As Application, choosen As Double)
-        If choosen = 1 Then
+    ''' <param name="xlApp">Ứng dụng Excel đang thao tác.</param>
+    ''' <param name="chosen">Giá trị lựa chọn 1/0.</param>
+    Friend Sub SlabLType(xlApp As Application, chosen As Double)
+        If chosen = 1 Then
             PubDVal(xlApp, "BA45", DtlDInp(vbTab & "180×5320: "))
             PubDVal(xlApp, "BA46", DtlDInp(vbTab & "180×4820: "))
             PubDVal(xlApp, "BA47", DtlDInp(vbTab & "180×4320: "))
@@ -55,12 +58,12 @@ Friend Module Util
     End Sub
 
     ''' <summary>
-    ''' スラブ直 (D13).
+    ''' Nhập số lượng cho nhóm slab thẳng D13.
     ''' </summary>
-    ''' <param name="xlApp">Excel Application.</param>
-    ''' <param name="choosen">Selection.</param>
-    Friend Sub SlabStr(xlApp As Application, choosen As Double)
-        If choosen = 1 Then
+    ''' <param name="xlApp">Ứng dụng Excel đang thao tác.</param>
+    ''' <param name="chosen">Giá trị lựa chọn 1/0.</param>
+    Friend Sub SlabStr(xlApp As Application, chosen As Double)
+        If chosen = 1 Then
             PubDVal(xlApp, "BA55", DtlDInp(vbTab & "5500: "))
             PubDVal(xlApp, "BA56", DtlDInp(vbTab & "5000: "))
             PubDVal(xlApp, "BA57", DtlDInp(vbTab & "4500: "))
@@ -77,12 +80,12 @@ Friend Module Util
     End Sub
 
     ''' <summary>
-    ''' スラブ補強フック型 (D10).
+    ''' Nhập số lượng cho nhóm slab gia cường hook type D10.
     ''' </summary>
-    ''' <param name="xlApp">Excel Application.</param>
-    ''' <param name="choosen">Selection.</param>
-    Friend Sub SlabReinfHookType(xlApp As Application, choosen As Double)
-        If choosen = 1 Then
+    ''' <param name="xlApp">Ứng dụng Excel đang thao tác.</param>
+    ''' <param name="chosen">Giá trị lựa chọn 1/0.</param>
+    Friend Sub SlabReinfHookType(xlApp As Application, chosen As Double)
+        If chosen = 1 Then
             PubDModVal(xlApp, "67", "95×5405", 3.2, DtlDInp(vbTab & "95×5405: "))
             PubDModVal(xlApp, "68", "95×4905", 2.9, DtlDInp(vbTab & "95×4905: "))
             PubDModVal(xlApp, "69", "95×4405", 2.6, DtlDInp(vbTab & "95×4405: "))
@@ -97,12 +100,12 @@ Friend Module Util
     End Sub
 
     ''' <summary>
-    ''' スラブ補強直 (D10).
+    ''' Nhập số lượng cho nhóm slab gia cường thẳng D10.
     ''' </summary>
-    ''' <param name="xlApp">Excel Application.</param>
-    ''' <param name="choosen">Selection.</param>
-    Friend Sub SlabReinfStr(xlApp As Application, choosen As Double)
-        If choosen = 1 Then
+    ''' <param name="xlApp">Ứng dụng Excel đang thao tác.</param>
+    ''' <param name="chosen">Giá trị lựa chọn 1/0.</param>
+    Friend Sub SlabReinfStr(xlApp As Application, chosen As Double)
+        If chosen = 1 Then
             PubDVal(xlApp, "BA77", DtlDInp(vbTab & "5500: "))
             PubDVal(xlApp, "BA78", DtlDInp(vbTab & "5000: "))
             PubDVal(xlApp, "BA79", DtlDInp(vbTab & "4500: "))
@@ -117,9 +120,9 @@ Friend Module Util
     End Sub
 
     ''' <summary>
-    ''' 下端 (D13).
+    ''' Nhập nhóm thép dưới D13 và dòng bổ sung 750x1250.
     ''' </summary>
-    ''' <param name="xlApp">Excel Application.</param>
+    ''' <param name="xlApp">Ứng dụng Excel đang thao tác.</param>
     Friend Sub LwrEndD13(xlApp As Application)
         PubDVal(xlApp, "BA110", DtlDInp(vbTab & "    5500: "))
         PubDVal(xlApp, "BA111", DtlDInp(vbTab & "    5000: "))
@@ -135,12 +138,12 @@ Friend Module Util
     End Sub
 
     ''' <summary>
-    ''' 下端 (D16).
+    ''' Nhập nhóm thép dưới D16, kèm đơn giá cho các dòng có cấu hình giá.
     ''' </summary>
-    ''' <param name="xlApp">Excel Application.</param>
-    ''' <param name="choosen">Selection.</param>
-    Friend Sub LwrEndD16(xlApp As Application, choosen As Double)
-        If choosen = 1 Then
+    ''' <param name="xlApp">Ứng dụng Excel đang thao tác.</param>
+    ''' <param name="chosen">Giá trị lựa chọn 1/0.</param>
+    Friend Sub LwrEndD16(xlApp As Application, chosen As Double)
+        If chosen = 1 Then
             PubDModVal(xlApp, "97", "D16", "（下部主筋　直筋）", "5500", 8.6, My.Settings.Pr_D16, DtlDInp(vbTab & "5500: "))
             PubDModVal(xlApp, "98", "D16", "（下部主筋　直筋）", "5000", 7.8, My.Settings.Pr_D16, DtlDInp(vbTab & "5000: "))
             PubDModVal(xlApp, "99", "D16", "（下部主筋　直筋）", "4500", 7.1, My.Settings.Pr_D16, DtlDInp(vbTab & "4500: "))
@@ -155,12 +158,12 @@ Friend Module Util
     End Sub
 
     ''' <summary>
-    ''' 端部 (D10).
+    ''' Nhập số lượng cho nhóm thép đầu biên D10.
     ''' </summary>
-    ''' <param name="xlApp">Excel Application.</param>
-    ''' <param name="choosen">Selection.</param>
-    Friend Sub Edge(xlApp As Application, choosen As Double)
-        If choosen = 1 Then
+    ''' <param name="xlApp">Ứng dụng Excel đang thao tác.</param>
+    ''' <param name="chosen">Giá trị lựa chọn 1/0.</param>
+    Friend Sub Edge(xlApp As Application, chosen As Double)
+        If chosen = 1 Then
             PubDVal(xlApp, "BA87", DtlDInp(vbTab & "5500: "))
             PubDVal(xlApp, "BA88", DtlDInp(vbTab & "5000: "))
             PubDVal(xlApp, "BA89", DtlDInp(vbTab & "4500: "))
@@ -175,9 +178,9 @@ Friend Module Util
     End Sub
 
     ''' <summary>
-    ''' コーナー.
+    ''' Nhập số lượng cho nhóm thép góc.
     ''' </summary>
-    ''' <param name="xlApp">Excel Application.</param>
+    ''' <param name="xlApp">Ứng dụng Excel đang thao tác.</param>
     Friend Sub JtCor(xlApp As Application)
         PubDModVal(xlApp, "121", "D16", "（コーナー）", "900×900", 2.9, DtlDInp(vbTab & "D16: "))
         PubDVal(xlApp, "BA123", DtlDInp(vbTab & "D13: "))
@@ -185,12 +188,12 @@ Friend Module Util
     End Sub
 
     ''' <summary>
-    ''' ハンチ (H250).
+    ''' Nhập số lượng cho nhóm haunch H250.
     ''' </summary>
-    ''' <param name="xlApp">Excel Application.</param>
-    ''' <param name="choosen">Selection.</param>
-    Friend Sub Haunch(xlApp As Application, choosen As Double)
-        If choosen = 1 Then
+    ''' <param name="xlApp">Ứng dụng Excel đang thao tác.</param>
+    ''' <param name="chosen">Giá trị lựa chọn 1/0.</param>
+    Friend Sub Haunch(xlApp As Application, chosen As Double)
+        If chosen = 1 Then
             PubDModVal(xlApp, "126", "900×曲（H250）×900", 3.5, DtlDInp(vbTab & "D16: "))
             PubDModVal(xlApp, "127", "D13", "750×曲（H250）×750", 2, DtlDInp(vbTab & "D13: "))
             PubDModVal(xlApp, "125", "D10", "（斜筋）", "600×曲（H250）×600", 0.9, DtlDInp(vbTab & "D10: "))
@@ -198,10 +201,10 @@ Friend Module Util
     End Sub
 
     ''' <summary>
-    ''' 電気温水器.
+    ''' Ghi hoặc xóa số lượng máy nước nóng điện.
     ''' </summary>
-    ''' <param name="xlApp">Excel Application.</param>
-    ''' <param name="value">Value.</param>
+    ''' <param name="xlApp">Ứng dụng Excel đang thao tác.</param>
+    ''' <param name="value">Số lượng máy nước nóng điện.</param>
     Friend Sub ElecWtrHtr(xlApp As Application, value As Double)
         If value > 0 Then
             DctVal(xlApp, "BA30", value)
@@ -211,9 +214,9 @@ Friend Module Util
     End Sub
 
     ''' <summary>
-    ''' 副資材リスト.
+    ''' Nhập thông tin công trình và danh sách vật tư phụ.
     ''' </summary>
-    ''' <param name="xlApp">Excel Application.</param>
+    ''' <param name="xlApp">Ứng dụng Excel đang thao tác.</param>
     Friend Sub Parts(xlApp As Application)
         Dim name = $"{DtlSInp(vbTab & "邸名" & vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & ": ")}様邸"
         DctVal(xlApp, "BJ13", name)
@@ -243,7 +246,7 @@ Friend Module Util
         PubDVal(xlApp, "BA156", DtlDInp(vbTab & "カットスクリューⅡ・専用ピット (個)" & vbTab & vbTab & vbTab & vbTab & ": "))
         PubDVal(xlApp, "BA146", DtlDInpDesc(vbTab & "スペーサーブロック (個)", vbTab & vbTab & vbTab & vbTab & "[H60]" & vbTab & vbTab))
         PubDVal(xlApp, "BA147", DtlDInpDesc(vbTab & "スペーサーブロック (個)", vbTab & vbTab & vbTab & vbTab & "[H80]" & vbTab & vbTab))
-        ' Extend
+        ' Nhóm vật tư mở rộng so với form cơ bản.
         PubDVal(xlApp, "BA152", DtlDInpDesc(vbTab & "アンカーボルトセット (ｾｯﾄ)", vbTab & vbTab & vbTab & "[M18×380]" & vbTab))
         PubDVal(xlApp, "BA157", DtlDInpDesc(vbTab & "Ｕボルト (ｾｯﾄ)", vbTab & vbTab & vbTab & vbTab & vbTab & "[M8]" & vbTab & vbTab))
     End Sub
