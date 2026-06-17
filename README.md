@@ -1,74 +1,86 @@
-# Ibaraki PCa Weight
+# TOUHOKU (PCA-BF) WEIGHT
 
-Ứng dụng VB.NET hỗ trợ team 西山 của エマール group nhập nhanh dữ liệu vật tư/trọng lượng cho mẫu Excel 茨城 (プレキャス) 重量 từ đối tác 文化シャッター. Chương trình chạy dạng console có dùng WinForms cho hộp license, chọn file Excel và màn hình cập nhật.
+Ứng dụng hỗ trợ đội 西山 thuộc エマールグループ nhập và chuyển dữ liệu nhanh hơn cho mẫu trọng lượng 茨城 (プレキャス - BF) từ đối tác 文化シャッター.
 
-## Chức năng chính
+## Icon
 
-- Kiểm tra license cục bộ trước khi chạy luồng xử lý.
-- Kiểm tra phiên bản mới từ server cấu hình trong `My.Resources`.
-- Yêu cầu đóng Excel, mở workbook người dùng chọn, nhập số lượng theo từng nhóm cấu kiện/vật tư và lưu lại workbook.
-- Tự tải bộ cài `.msi` mới khi có phiên bản cập nhật.
-- Ghi dữ liệu vào đúng ô của template Excel, đồng thời tô màu các ô trọng lượng/đơn giá được chỉnh tay.
+<p align='center'>
+<img src='pic/0.png'></img>
+</p>
 
-## Luồng xử lý
+## Thành Phần Chính
 
-1. `Script/Main.vb` thiết lập UTF-8 và xác thực license nếu user setting `Chk_Key` chưa hợp lệ.
-2. `Script/Common.vb` kiểm tra cập nhật, yêu cầu đóng Excel, mở file qua `OpenFileDialog`, gọi service nghiệp vụ và dọn Excel COM object sau khi lưu.
-3. `Script/Service.vb` điều phối thứ tự các nhóm nhập liệu theo template 茨城 PCa.
-4. `Script/Util.vb` chứa mapping nghiệp vụ từ từng câu hỏi sang ô Excel cụ thể.
-5. `Control/FrmUpdate.vb` tải installer mới, hiển thị tiến độ và chỉ chạy installer khi download hoàn tất thành công.
+| Thành phần | Tệp | Mô tả |
+|---|---|---|
+| `Main` | `Ibaraki Pca Weight/Script/Main.vb` | Điểm vào ứng dụng: thiết lập console UTF-8, kiểm tra serial bản quyền và gọi `RunApp`. |
+| `Common` | `Ibaraki Pca Weight/Script/Common.vb` | Hàm dùng chung: kiểm tra cập nhật, thao tác Excel COM, định dạng console, hiệu ứng biểu mẫu, quản lý tiến trình và file. |
+| `Constant` | `Ibaraki Pca Weight/Script/Constant.vb` | Hằng số toàn ứng dụng: tên tiến trình Excel, tên file cài đặt và đường dẫn trong AppData. |
+| `Service` | `Ibaraki Pca Weight/Script/Service.vb` | Điều phối luồng `WtIbarakiPca`, chạy lần lượt toàn bộ nhóm câu hỏi nhập liệu. |
+| `Util` | `Ibaraki Pca Weight/Script/Util.vb` | Logic nghiệp vụ: mỗi nhóm nhập liệu được ánh xạ tới các ô Excel tương ứng. |
+| `FrmUpdate` | `Ibaraki Pca Weight/Control/FrmUpdate.vb` | Biểu mẫu cập nhật: tải file MSI, hiển thị tiến độ, chặn Alt+F4 và chạy trình cài đặt khi tải xong. |
 
-## Summary source tự viết
+## Luồng Chạy
 
-| File | Vai trò | Ghi chú cleanup |
-| --- | --- | --- |
-| `Script/Main.vb` | Entry point, kiểm tra license và gọi `RunApp()`. | Bỏ `GoTo`, chuyển sang vòng lặp `ValidateLicense()` rõ ràng hơn. |
-| `Script/Constant.vb` | Khai báo tên process Excel, tên file setup và đường dẫn lưu installer. | Dùng `Path.Combine` thay cho nối chuỗi đường dẫn thủ công. |
-| `Script/Common.vb` | Helper dùng chung cho update check, Excel Interop, nhập liệu console, timer và hiệu ứng form. | Thêm kiểu trả về rõ ràng, sửa điều kiện nhập 1/0, dispose `WebClient`, dọn workbook/Excel COM object, ghi ô Excel trực tiếp qua `Range` thay vì `Activate()/ActiveCell`. |
-| `Script/Service.vb` | Điều phối các nhóm câu hỏi theo đúng thứ tự template. | Việt hóa comment và giữ nguyên thứ tự nghiệp vụ để tránh lệch form Excel. |
-| `Script/Util.vb` | Mapping số lượng vật tư/thép sang các ô như `BA35`, `CM120`, `CQ97`. | Việt hóa XML summary/param, sửa typo `choosen` thành `chosen`, giữ nguyên label Nhật và địa chỉ ô. |
-| `Control/FrmUpdate.vb` | Form tải bản cập nhật và chạy installer. | Chuyển logic đóng form sang `DownloadFileCompleted`, không chạy installer khi tải lỗi, dispose `WebClient`. |
-| `My Project/AssemblyInfo.vb` | Metadata assembly và version. | Việt hóa comment metadata thủ công. |
+```text
+Main()
+ ├─ ValidateLicense()        ← kiểm tra serial trong tài nguyên
+ └─ RunApp()
+     ├─ ChkUpd()            ← kiểm tra phiên bản qua mạng; mở FrmUpdate nếu có bản mới
+     ├─ KillXl()            ← kết thúc các tiến trình excel.exe đang mở
+     ├─ OpenFileDialog      ← người dùng chọn file *.xlsx / *.xls
+     └─ ProcessWorkbook()
+         ├─ Excel.Application (COM)
+         ├─ WtIbarakiPca()  ← ghi toàn bộ nhóm dữ liệu vào sổ tính
+         ├─ Workbook.Close(Save)
+         └─ Process.Start() ← mở lại file đã lưu bằng ứng dụng mặc định
+```
 
-Các file `*.Designer.vb`, `*.resx`, `Application.myapp`, `Settings.settings`, icon/gif/png và nội dung trong `packages/` được xem là designer/autogen hoặc asset nên không sửa comment thủ công.
+## Nhóm Nhập Liệu
 
-## Code demo
+| # | Câu hỏi | Ô Excel |
+|---|---|---|
+| 1 | 運賃 (2トン車) | BA108, BA109, BA158 |
+| 2 | スラブフック型 D13 | BA35 - BA44 |
+| 3 | スラブＬ型 D13 | BA45 - BA54 |
+| 4 | スラブ直 D13 | BA55 - BA66 |
+| 5 | スラブ補強フック型 D10 | BA67 - BA76 |
+| 6 | スラブ補強直 D10 | BA77 - BA86 |
+| 7 | 下端 D13, bắt buộc | BA110 - BA120 |
+| 8 | 下端 D16 | BA97 - BA106 |
+| 9 | 端部 D10 | BA87 - BA96 |
+| 10 | スリーブ | BA124 |
+| 11 | コーナー | BA121 - BA123 |
+| 12 | 土間用さし | BA137 |
+| 13 | Ｕ型 D16 | BA126 |
+| 14 | ハンチ H250 | BA125 - BA127 |
+| 15 | 深基礎用端部スラブ D10 | BA128 |
+| 16 | 電気温水器 | BA30 |
+| 17 | 副資材リスト, gồm vật tư phụ và thông tin công trình | BA140 - BA157, BF155, CB155, AD6, BO3, BJ13, BJ14 |
+
+## Minh Họa Mã Nguồn
+
+Trích nguyên văn từ `Ibaraki Pca Weight/Script/Util.vb`:
 
 ```vb
-''' <summary>
-''' Ghi lựa chọn vận chuyển bằng xe 2 tấn và số dòng thép mặc định.
-''' </summary>
-''' <param name="xlApp">Ứng dụng Excel đang thao tác.</param>
-''' <param name="chosen">Giá trị lựa chọn 1/0.</param>
-Friend Sub Fare(xlApp As Application, chosen As Double)
-    If chosen = 1 Then
-        DctVal(xlApp, "BA158", chosen)
-    End If
-    DctVal(xlApp, "BA108", 5) ' D13
-    DctVal(xlApp, "BA109", 3) ' D10
-End Sub
+    ''' <summary>
+    ''' Ghi lựa chọn vận chuyển bằng xe 2 tấn và số dòng thép mặc định.
+    ''' </summary>
+    ''' <param name="xlApp">Ứng dụng Excel đang thao tác.</param>
+    ''' <param name="chosen">Giá trị lựa chọn 1/0.</param>
+    Friend Sub Fare(xlApp As Application, chosen As Double)
+        If chosen = 1 Then
+            DctVal(xlApp, "BA158", chosen)
+        End If
+        DctVal(xlApp, "BA108", 5) ' D13
+        DctVal(xlApp, "BA109", 3) ' D10
+    End Sub
 ```
 
-## Build
+## Gói Phụ Thuộc
 
-Project target `.NET Framework 4.8.1`, dùng Visual Studio/MSBuild cho project VB.NET cũ:
+<img src='pic/1.png' align='left' width='3%' height='3%'></img>
+<div style='display:flex;'>
 
-```powershell
-& 'C:\Program Files\Microsoft Visual Studio\18\Professional\MSBuild\Current\Bin\MSBuild.exe' '.\Ibaraki Pca Weight\Ibaraki Pca Weight.vbproj' /p:Configuration=Release /p:Platform=AnyCPU /m
-```
+- Microsoft.Office.Interop.Excel » 15.0.4795.1001
 
-`dotnet build` với SDK mới có thể lỗi resource non-string của WinForms/.NET Framework cũ; nên ưu tiên MSBuild đi kèm Visual Studio.
-
-## Package
-
-- `Microsoft.Office.Interop.Excel` 15.0.4795.1001
-
-## Hình minh họa
-
-<p align="center">
-  <img src="pic/0.png" alt="Màn hình mask của Ibaraki PCa Weight">
-</p>
-
-<p align="center">
-  <img src="pic/1.png" width="48" alt="Biểu tượng package">
-</p>
+</div>
